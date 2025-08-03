@@ -1,0 +1,712 @@
+[
+    {
+        "id": "f8effcf9d75bb72e",
+        "type": "tab",
+        "label": "Sistema Estacionamiento IoT OPTIMIZADO",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "53251083e41eb481",
+        "type": "mqtt in",
+        "z": "f8effcf9d75bb72e",
+        "name": "Status General",
+        "topic": "estacionamiento/status",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "broker.hivemq",
+        "inputs": 0,
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "2422c2b68b02149c",
+                "496224e43db3c05d"
+            ]
+        ]
+    },
+    {
+        "id": "f1e28564a1d601a6",
+        "type": "mqtt in",
+        "z": "f8effcf9d75bb72e",
+        "name": "Espacio 1",
+        "topic": "estacionamiento/espacio1",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "broker.hivemq",
+        "inputs": 0,
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "99e6f6c7fa3f19a4",
+                "fd1dd9e471089b16"
+            ]
+        ]
+    },
+    {
+        "id": "742ebe324c0bcef3",
+        "type": "mqtt in",
+        "z": "f8effcf9d75bb72e",
+        "name": "Espacio 2",
+        "topic": "estacionamiento/espacio2",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "broker.hivemq",
+        "inputs": 0,
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "9bf1bb78225ae386",
+                "c82b3aef721a0a8c"
+            ]
+        ]
+    },
+    {
+        "id": "ac7a9dd669be6325",
+        "type": "mqtt in",
+        "z": "f8effcf9d75bb72e",
+        "name": "Iluminación",
+        "topic": "estacionamiento/iluminacion",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "broker.hivemq",
+        "inputs": 0,
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "f711d7f636e7796e",
+                "d257449de8b906c4"
+            ]
+        ]
+    },
+    {
+        "id": "8711ebfe04dcc129",
+        "type": "mqtt in",
+        "z": "f8effcf9d75bb72e",
+        "name": "Barrera",
+        "topic": "estacionamiento/barrera",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "broker.hivemq",
+        "inputs": 0,
+        "x": 140,
+        "y": 320,
+        "wires": [
+            [
+                "e53c2cc8fb85a999",
+                "3bf3dacafc7fb14a"
+            ]
+        ]
+    },
+    {
+        "id": "2422c2b68b02149c",
+        "type": "json",
+        "z": "f8effcf9d75bb72e",
+        "name": "Parse Status",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 320,
+        "y": 80,
+        "wires": [
+            [
+                "a4179b3061e82c83",
+                "2b98827909a5b5e6",
+                "81d9ed6529417f05"
+            ]
+        ]
+    },
+    {
+        "id": "99e6f6c7fa3f19a4",
+        "type": "json",
+        "z": "f8effcf9d75bb72e",
+        "name": "Parse Esp1",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "e62daafcda6e81c1"
+            ]
+        ]
+    },
+    {
+        "id": "9bf1bb78225ae386",
+        "type": "json",
+        "z": "f8effcf9d75bb72e",
+        "name": "Parse Esp2",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "ff636884c597729f"
+            ]
+        ]
+    },
+    {
+        "id": "f711d7f636e7796e",
+        "type": "json",
+        "z": "f8effcf9d75bb72e",
+        "name": "Parse Luz",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 320,
+        "y": 260,
+        "wires": [
+            [
+                "dd48c7de025710ac"
+            ]
+        ]
+    },
+    {
+        "id": "e53c2cc8fb85a999",
+        "type": "json",
+        "z": "f8effcf9d75bb72e",
+        "name": "Parse Barrera",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 320,
+        "y": 320,
+        "wires": [
+            [
+                "9bf824f8f30e12d5"
+            ]
+        ]
+    },
+    {
+        "id": "a4179b3061e82c83",
+        "type": "function",
+        "z": "f8effcf9d75bb72e",
+        "name": "Preparar ThingSpeak OPTIMIZADO",
+        "func": "var apiKey = 'M1KVPULM9LKUAI09';\n\n// 🔍 VALIDACIONES MEJORADAS\nnode.warn(\"🔍 === THINGSPEAK OPTIMIZADO === \" + new Date().toISOString());\n\nif (!msg.payload || typeof msg.payload !== 'object') {\n    node.error(\"❌ Payload inválido: \" + typeof msg.payload);\n    node.status({fill:\"red\", shape:\"dot\", text:\"Payload inválido\"});\n    return null;\n}\n\n// ✅ VALIDAR CAMPOS OBLIGATORIOS CON VALORES POR DEFECTO\nvar espaciosLibres = (msg.payload.espacios_libres !== undefined) ? parseInt(msg.payload.espacios_libres) : 0;\nvar espaciosOcupados = (msg.payload.espacios_ocupados !== undefined) ? parseInt(msg.payload.espacios_ocupados) : 0;\nvar porcentajeOcupacion = (msg.payload.porcentaje_ocupacion !== undefined) ? parseFloat(msg.payload.porcentaje_ocupacion) : 0.0;\nvar barreraAbierta = (msg.payload.barrera_abierta !== undefined) ? (msg.payload.barrera_abierta ? 1 : 0) : 0;\nvar nivelLuz = (msg.payload.nivel_luz !== undefined) ? parseInt(msg.payload.nivel_luz) : 0;\nvar lucesEncendidas = (msg.payload.luces_encendidas !== undefined) ? (msg.payload.luces_encendidas ? 1 : 0) : 0;\n\n// 🚀 CONSTRUIR URL OPTIMIZADA\nvar url = 'https://api.thingspeak.com/update?api_key=' + apiKey;\nurl += '&field1=' + espaciosLibres;\nurl += '&field2=' + espaciosOcupados;  \nurl += '&field3=' + porcentajeOcupacion.toFixed(2);\nurl += '&field4=' + barreraAbierta;\nurl += '&field5=' + nivelLuz;\nurl += '&field6=' + lucesEncendidas;\n\n// 📊 LOGS DETALLADOS\nvar fieldsData = [\n    \"Field1(Libres)=\" + espaciosLibres,\n    \"Field2(Ocupados)=\" + espaciosOcupados,\n    \"Field3(%)=\" + porcentajeOcupacion.toFixed(2),\n    \"Field4(Barrera)=\" + barreraAbierta,\n    \"Field5(Luz)=\" + nivelLuz,\n    \"Field6(Luces)=\" + lucesEncendidas\n];\n\nnode.warn(\"📊 Enviando: \" + fieldsData.join(\", \"));\nnode.warn(\"🔗 URL: \" + url);\n\n// ⏱️ CONTROL DE TIEMPO MEJORADO\nvar now = new Date();\nif (!context.lastSend) {\n    context.lastSend = 0;\n}\n\nvar timeSinceLastSend = now.getTime() - context.lastSend;\nif (timeSinceLastSend < 15000) { // Menos de 15 segundos\n    var remainingTime = (15000 - timeSinceLastSend) / 1000;\n    node.warn(\"⏱️ BLOQUEADO: Solo han pasado \" + (timeSinceLastSend/1000).toFixed(1) + \"s desde último envío\");\n    node.status({fill:\"yellow\", shape:\"dot\", text:\"Esperando \" + remainingTime.toFixed(1) + \"s\"});\n    return null;\n}\n\n// Actualizar timestamp\ncontext.lastSend = now.getTime();\n\n// Configurar mensaje\nmsg.url = url;\nmsg.method = 'GET';\nmsg.timeout = 10000; // 10 segundos timeout\n\n// Agregar metadata para debugging\nmsg.debug_timestamp = now.toISOString();\nmsg.debug_fields = fieldsData;\n\nnode.status({fill:\"blue\", shape:\"dot\", text:\"Enviando 6 campos...\"});\nnode.warn(\"✅ Enviando a ThingSpeak - \" + now.toTimeString());\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 60,
+        "wires": [
+            [
+                "c29df40892cbe283"
+            ]
+        ]
+    },
+    {
+        "id": "c29df40892cbe283",
+        "type": "http request",
+        "z": "f8effcf9d75bb72e",
+        "name": "Enviar a ThingSpeak",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 920,
+        "y": 200,
+        "wires": [
+            [
+                "a01b7ff7515b33ea",
+                "59c1ff8a22e67f43"
+            ]
+        ]
+    },
+    {
+        "id": "59c1ff8a22e67f43",
+        "type": "function",
+        "z": "f8effcf9d75bb72e",
+        "name": "Status ThingSpeak OPTIMIZADO",
+        "func": "node.warn(\"🔍 === RESPUESTA THINGSPEAK === \" + new Date().toTimeString());\nnode.warn(\"📊 Status Code: \" + (msg.statusCode || \"Sin código\"));\nnode.warn(\"📄 Response Body: '\" + (msg.payload || \"Sin respuesta\") + \"'\");\nnode.warn(\"🕐 Request Time: \" + (msg.debug_timestamp || \"No timestamp\"));\n\nif (msg.statusCode === 200) {\n    var response = msg.payload ? msg.payload.toString().trim() : '';\n    var entryId = parseInt(response);\n    \n    node.warn(\"🔍 Parsing response: '\" + response + \"' -> Number: \" + entryId);\n    \n    if (entryId > 0) {\n        // ✅ ÉXITO TOTAL\n        node.status({fill:\"green\", shape:\"dot\", text:\"✅ SUCCESS! ID: \" + entryId});\n        node.log(\"🎉 ¡ÉXITO COMPLETO! ThingSpeak Entry ID: \" + entryId);\n        node.warn(\"🎯 Datos enviados correctamente: \" + (msg.debug_fields ? msg.debug_fields.join(\", \") : \"N/A\"));\n        \n        // Mensaje de éxito\n        msg.thingspeak_success = true;\n        msg.thingspeak_id = entryId;\n        msg.success_timestamp = new Date().toISOString();\n        \n    } else if (response === '0') {\n        // ❌ ERROR MÁS COMÚN - Análisis detallado\n        node.status({fill:\"red\", shape:\"dot\", text:\"❌ Error: Retornó 0\"});\n        node.error(\"❌ ThingSpeak retornó 0 - DIAGNÓSTICO COMPLETO:\");\n        node.error(\"   ⏱️  Tiempo desde último envío: verificar >= 15s\");\n        node.error(\"   🔑 API Key usada: \" + (msg.url ? \"presente en URL\" : \"no encontrada\"));\n        node.error(\"   📊 Canal: verificar que tenga 6 campos configurados\");\n        node.error(\"   🌐 Conectividad: verificar acceso a internet\");\n        node.error(\"   📡 URL enviada: \" + (msg.url || \"No URL\"));\n        \n        msg.thingspeak_success = false;\n        msg.thingspeak_error = \"API returned 0\";\n        \n    } else if (response === '-1') {\n        node.status({fill:\"red\", shape:\"dot\", text:\"❌ Formato incorrecto\"});\n        node.error(\"❌ Error -1: Formato de datos incorrecto\");\n        \n        msg.thingspeak_success = false;\n        msg.thingspeak_error = \"Invalid data format\";\n        \n    } else {\n        node.status({fill:\"yellow\", shape:\"dot\", text:\"⚠️ Respuesta: \" + response});\n        node.warn(\"⚠️ Respuesta inesperada de ThingSpeak: '\" + response + \"'\");\n        \n        msg.thingspeak_success = false;\n        msg.thingspeak_error = \"Unexpected response: \" + response;\n    }\n    \n} else if (msg.statusCode) {\n    // Errores HTTP específicos\n    node.status({fill:\"red\", shape:\"dot\", text:\"❌ HTTP \" + msg.statusCode});\n    node.error(\"❌ Error HTTP \" + msg.statusCode);\n    \n    msg.thingspeak_success = false;\n    msg.thingspeak_error = \"HTTP \" + msg.statusCode;\n    \n} else {\n    // Sin código de respuesta\n    node.status({fill:\"red\", shape:\"dot\", text:\"❌ Sin respuesta HTTP\"});\n    node.error(\"❌ No se recibió código de respuesta HTTP\");\n    \n    msg.thingspeak_success = false;\n    msg.thingspeak_error = \"No HTTP response\";\n}\n\n// Agregar timestamp del análisis\nmsg.analysis_timestamp = new Date().toISOString();\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b98827909a5b5e6",
+        "type": "ui_text",
+        "z": "f8effcf9d75bb72e",
+        "group": "ui_group_parking",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Estado General",
+        "label": "🚗 Estado del Parking",
+        "format": "{{msg.payload.espacios_libres}}/{{msg.payload.total_espacios}} espacios libres ({{msg.payload.porcentaje_ocupacion.toFixed(1)}}% ocupado)",
+        "layout": "row-spread",
+        "x": 560,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "81d9ed6529417f05",
+        "type": "ui_gauge",
+        "z": "f8effcf9d75bb72e",
+        "name": "Ocupación %",
+        "group": "ui_group_parking",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ocupación del Parking",
+        "label": "%",
+        "format": "{{value.toFixed(1)}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "70",
+        "x": 570,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e62daafcda6e81c1",
+        "type": "ui_text",
+        "z": "f8effcf9d75bb72e",
+        "group": "ui_group_parking",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Estado Espacio 1",
+        "label": "🅿️ Espacio 1",
+        "format": "{{msg.payload.ocupado ? '🔴 OCUPADO' : '🟢 LIBRE'}}",
+        "layout": "row-spread",
+        "x": 560,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ff636884c597729f",
+        "type": "ui_text",
+        "z": "f8effcf9d75bb72e",
+        "group": "ui_group_parking",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Estado Espacio 2",
+        "label": "🅿️ Espacio 2",
+        "format": "{{msg.payload.ocupado ? '🔴 OCUPADO' : '🟢 LIBRE'}}",
+        "layout": "row-spread",
+        "x": 560,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "dd48c7de025710ac",
+        "type": "ui_text",
+        "z": "f8effcf9d75bb72e",
+        "group": "ui_group_parking",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "Estado Iluminación",
+        "label": "💡 Iluminación",
+        "format": "{{msg.payload.luces_encendidas ? '🟡 ENCENDIDAS' : '⚫ APAGADAS'}} ({{msg.payload.modo}})",
+        "layout": "row-spread",
+        "x": 560,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "9bf824f8f30e12d5",
+        "type": "ui_text",
+        "z": "f8effcf9d75bb72e",
+        "group": "ui_group_parking",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "Estado Barrera",
+        "label": "🚪 Barrera",
+        "format": "{{msg.payload.abierta ? '🟢 ABIERTA' : '🔴 CERRADA'}}",
+        "layout": "row-spread",
+        "x": 600,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "447edeb2dc314556",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Abrir Barrera",
+        "group": "ui_group_control",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "🚪 Abrir Barrera",
+        "tooltip": "Abrir barrera remotamente",
+        "color": "#FFFFFF",
+        "bgcolor": "#4CAF50",
+        "icon": "",
+        "payload": "ABRIR_BARRERA",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 420,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "fa828dd4c323f820",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Cerrar Barrera",
+        "group": "ui_group_control",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "🚪 Cerrar Barrera",
+        "tooltip": "Cerrar barrera remotamente",
+        "color": "#FFFFFF",
+        "bgcolor": "#F44336",
+        "icon": "",
+        "payload": "CERRAR_BARRERA",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "fc7f4d562e570efb",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Toggle Barrera",
+        "group": "ui_group_control",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "🔄 Toggle Barrera",
+        "tooltip": "Alternar estado de barrera",
+        "color": "#FFFFFF",
+        "bgcolor": "#2196F3",
+        "icon": "",
+        "payload": "TOGGLE_BARRERA",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 500,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "ba442e077e76f411",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Encender Luces",
+        "group": "ui_group_control",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "💡 Encender Luces",
+        "tooltip": "Encender luces manualmente",
+        "color": "#FFFFFF",
+        "bgcolor": "#FF9800",
+        "icon": "",
+        "payload": "ENCENDER_LUCES",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 540,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "991f2a72a60540f5",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Apagar Luces",
+        "group": "ui_group_control",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "label": "🌙 Apagar Luces",
+        "tooltip": "Apagar luces manualmente",
+        "color": "#FFFFFF",
+        "bgcolor": "#9C27B0",
+        "icon": "",
+        "payload": "APAGAR_LUCES",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 580,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "b98c59df8ef5fd95",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Modo Automático",
+        "group": "ui_group_control",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "label": "🤖 Modo Automático",
+        "tooltip": "Activar control automático de luces",
+        "color": "#FFFFFF",
+        "bgcolor": "#4CAF50",
+        "icon": "",
+        "payload": "MODO_AUTOMATICO",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 620,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "a5bc33da3d4bbd79",
+        "type": "ui_button",
+        "z": "f8effcf9d75bb72e",
+        "name": "Reset Sistema",
+        "group": "ui_group_control",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "label": "🔄 Reset Sistema",
+        "tooltip": "Resetear todo el sistema",
+        "color": "#FFFFFF",
+        "bgcolor": "#FF5722",
+        "icon": "",
+        "payload": "RESET_SISTEMA",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 660,
+        "wires": [
+            [
+                "b9b3e2ac16ea48c5"
+            ]
+        ]
+    },
+    {
+        "id": "b9b3e2ac16ea48c5",
+        "type": "mqtt out",
+        "z": "f8effcf9d75bb72e",
+        "name": "Enviar Comando",
+        "topic": "estacionamiento/comando",
+        "qos": "0",
+        "retain": "false",
+        "broker": "broker.hivemq",
+        "x": 380,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "496224e43db3c05d",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "Debug Status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "fd1dd9e471089b16",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "Debug Esp1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c82b3aef721a0a8c",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "Debug Esp2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d257449de8b906c4",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "Debug Luz",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "3bf3dacafc7fb14a",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "Debug Barrera",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "a01b7ff7515b33ea",
+        "type": "debug",
+        "z": "f8effcf9d75bb72e",
+        "name": "ThingSpeak Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e3d3fb7b6b14e315",
+        "type": "ui_spacer",
+        "z": "f8effcf9d75bb72e",
+        "name": "spacer",
+        "group": "ui_group_control",
+        "order": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "broker.hivemq",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Public",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "NodeRED_Parking_System_2025",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "ui_group_parking",
+        "type": "ui_group",
+        "name": "Estado Parking",
+        "tab": "ui_tab_main",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_control",
+        "type": "ui_group",
+        "name": "Control Remoto",
+        "tab": "ui_tab_main",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_tab_main",
+        "type": "ui_tab",
+        "name": "Estacionamiento IoT",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "84408efb229d43ae",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.5"
+        }
+    }
+]
